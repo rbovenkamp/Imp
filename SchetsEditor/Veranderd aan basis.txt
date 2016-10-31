@@ -1,0 +1,2 @@
+﻿Tools in meerdere bestanden gesplitst zodat ik minder hoef te scrollen op mijn kleine laptop scherm
+PenTool compleet aangepast zodat deze makkelijker op te slaan is als lijnen i.p.v. losse punten
