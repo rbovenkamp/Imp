@@ -26,6 +26,20 @@ namespace SchetsEditor
             this.schets = new Schets(bmp);
             initialiseerControls();
         }
+        public void LaadHistorieUitString(string schetsBestand)
+        {
+            this.Historie = new SchetsHistorie(schetsBestand);
+            TekenHistorie();
+        }
+        public void TekenHistorie()
+        {
+            Graphics g = this.MaakBitmapGraphics();
+
+            for (int n = 0; n < Historie.Count; n++)
+            {
+                Historie[n].Teken(g);
+            }
+        }
         private void initialiseerControls()
         {
             this.Historie = new SchetsHistorie();

@@ -17,6 +17,7 @@ namespace SchetsEditor
         {
             Bitmap = bmp;
         }
+
         public Graphics BitmapGraphics
         {
             get { return Graphics.FromImage(Bitmap); }

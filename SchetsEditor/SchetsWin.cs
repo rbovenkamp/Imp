@@ -83,6 +83,14 @@ namespace SchetsEditor
             initialiseerControls();
         }
 
+        public SchetsWin(string schetsBestand)
+        {
+            schetscontrol = new SchetsControl();
+            this.ClientSize = new Size(700, 500);
+            initialiseerControls();
+            schetscontrol.LaadHistorieUitString(schetsBestand);
+        }
+
         private void initialiseerControls()
         {
             ISchetsTool[] deTools = { new PenTool()

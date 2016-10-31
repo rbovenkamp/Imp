@@ -16,7 +16,7 @@ namespace SchetsEditor.Dialog
         public OpenImageDialog()
         {
             innerDialog = new OpenFileDialog();
-            innerDialog.Filter = "Images|*.png;*.bmp;*.jpg;|All files (*.*)|*.*";
+            innerDialog.Filter = "Schets|*.schets|Images|*.png;*.bmp;*.jpg;|All files (*.*)|*.*";
         }
         
         public DialogResult ShowDialog()

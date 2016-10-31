@@ -1,6 +1,7 @@
 ﻿using SchetsEditor.Dialog;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SchetsEditor
@@ -52,10 +53,19 @@ namespace SchetsEditor
             DialogResult result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Image img = Image.FromFile(dialog.FileName);
-                Bitmap bmp = new Bitmap(img);
+                SchetsWin s;
 
-                SchetsWin s = new SchetsWin(bmp);
+                if (dialog.FileName.EndsWith(".schets"))
+                {
+                    s = new SchetsWin(File.ReadAllText(dialog.FileName));
+                }
+                else
+                {
+                    Image img = Image.FromFile(dialog.FileName);
+                    Bitmap bmp = new Bitmap(img);
+                    s = new SchetsWin(bmp);
+                }
+                
                 s.MdiParent = this;
                 s.Show();
             }
