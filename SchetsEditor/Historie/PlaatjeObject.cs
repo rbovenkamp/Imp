@@ -108,7 +108,6 @@ namespace SchetsEditor.Historie
         public void Teken(Graphics g)
         {
             g.DrawImage(this.Bitmap, 0, 0, this.Bitmap.Width, this.Bitmap.Height);
-            this.Bitmap.Save("C:\\test.bmp");
         }
     }
 }
