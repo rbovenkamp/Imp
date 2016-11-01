@@ -134,6 +134,7 @@ namespace SchetsEditor
 
             menuStrip = new MenuStrip();
             menuStrip.Visible = false;
+            this.BackColor = Color.White;
             this.Controls.Add(menuStrip);
             this.maakFileMenu();
             this.maakToolMenu(deTools);

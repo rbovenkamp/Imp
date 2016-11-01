@@ -90,7 +90,7 @@ namespace SchetsEditor.Historie
             {
                 if (c == ',' || c==';')
                 {
-                    rgbs[currentRgbPos] = (byte)int.Parse(new string(buffer));
+                    rgbs[currentRgbPos] = (byte)int.Parse(new string(buffer, 0, currentBufferPos));
                     currentBufferPos = 0;
                     currentRgbPos ++;
                 }

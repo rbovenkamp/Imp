@@ -48,6 +48,7 @@ namespace SchetsEditor
         private void teken(object o, PaintEventArgs pea)
         {
             pea.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            pea.Graphics.FillRectangle(Brushes.White, 0, 0, ClientSize.Width, ClientSize.Height);
             schets.Teken(pea.Graphics);
         }
         private void veranderAfmeting(object o, EventArgs ea)
