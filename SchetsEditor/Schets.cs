@@ -1,49 +1,58 @@
 ﻿using SchetsEditor.Historie;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace SchetsEditor
 {
     public class Schets
     {
-        public Bitmap Bitmap { get; private set; }
+        public SchetsHistorie Historie;
+        private Size sz;
+
+        public Bitmap Bitmap
+        {
+            get
+            {
+                Bitmap bmp = new Bitmap(sz.Width, sz.Height);
+                Graphics g = Graphics.FromImage(bmp);
+                this.Teken(g);
+                return bmp;
+            }
+        }
 
         public Schets()
         {
-            Bitmap = new Bitmap(1, 1);
+            this.Historie = new SchetsHistorie();
         }
         public Schets(Bitmap bmp)
         {
-            Bitmap = bmp;
+            this.Historie = new SchetsHistorie();
+            this.Historie.Push(new PlaatjeObject(bmp));
         }
 
-        public Graphics BitmapGraphics
+        public void LaadHistorieUitString(string schetsBestand)
         {
-            get { return Graphics.FromImage(Bitmap); }
+            this.Historie = new SchetsHistorie(schetsBestand);
         }
 
         public void VeranderAfmeting(Size sz)
         {
-            if (sz.Width > Bitmap.Size.Width || sz.Height > Bitmap.Size.Height)
+            this.sz = sz;
+            if (this.Historie.Count == 0)
             {
-                Bitmap nieuw = new Bitmap( Math.Max(sz.Width,  Bitmap.Size.Width)
-                                         , Math.Max(sz.Height, Bitmap.Size.Height)
-                                         );
-                Graphics gr = Graphics.FromImage(nieuw);
-                gr.FillRectangle(Brushes.White, 0, 0, sz.Width, sz.Height);
-                gr.DrawImage(Bitmap, 0, 0);
-                Bitmap = nieuw;
+                this.Historie.Push(new PlaatjeObject(new Bitmap(sz.Width, sz.Height)));
             }
         }
         public void Teken(Graphics gr)
         {
-            gr.DrawImage(Bitmap, 0, 0);
+            for (int n = Historie.Count - 1; n >= 0 ; n--)
+            {
+                Historie[n].Teken(gr);
+            }
         }
         public void Schoon()
         {
-            Graphics gr = Graphics.FromImage(Bitmap);
-            gr.FillRectangle(Brushes.White, 0, 0, Bitmap.Width, Bitmap.Height);
+            Historie = new SchetsHistorie();
         }
         public void Roteer()
         {

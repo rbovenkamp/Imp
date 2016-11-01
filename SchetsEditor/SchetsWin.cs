@@ -63,7 +63,7 @@ namespace SchetsEditor
                         schetscontrol.Schets.Bitmap.Save(dialog.FileName, ImageFormat.Png);
                         break;
                     case SaveImageDialog.ImageType.Schets:
-                        File.WriteAllText(dialog.FileName, this.schetscontrol.Historie.Serialiseer());
+                        File.WriteAllText(dialog.FileName, schetscontrol.Schets.Historie.Serialiseer());
                         break;
                 }
             }
@@ -88,7 +88,7 @@ namespace SchetsEditor
             schetscontrol = new SchetsControl();
             this.ClientSize = new Size(700, 500);
             initialiseerControls();
-            schetscontrol.LaadHistorieUitString(schetsBestand);
+            schetscontrol.LaadHistorie(schetsBestand);
         }
 
         private void initialiseerControls()

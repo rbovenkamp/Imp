@@ -12,14 +12,14 @@ namespace SchetsEditor.Historie
         private const string kleurSerialisatieNaam = "kleur";
         private int dikte;
         private const string dikteSerialisatieNaam = "dikte";
-        private List<Point> gekleurdePunten;
+        public Stack<Point> Punten;
         private const string puntenSerialisatieNaam = "punten";
 
-        public PenObject(Color kleur, int dikte, List<Point> gekleurdePunten)
+        public PenObject(Color kleur, int dikte, Stack<Point> gekleurdePunten)
         {
             this.kleur = kleur;
             this.dikte = dikte;
-            this.gekleurdePunten = gekleurdePunten;
+            this.Punten = gekleurdePunten;
         }
 
         public string Serialiseer()
@@ -27,7 +27,7 @@ namespace SchetsEditor.Historie
             string geserialiseerd = kleurSerialisatieNaam + ":" + ColorTranslator.ToHtml(kleur) + "\\";
             geserialiseerd += dikteSerialisatieNaam + ":" + dikte + "\\";
 
-            IEnumerable<string> punten = gekleurdePunten.Select(x => x.X + "," + x.Y);
+            IEnumerable<string> punten = Punten.Select(x => x.X + "," + x.Y);
             geserialiseerd += puntenSerialisatieNaam + ":" + String.Join(";", punten);
 
             return geserialiseerd;
@@ -37,7 +37,7 @@ namespace SchetsEditor.Historie
         {
             Color kleur = Color.Black;
             int dikte = 0;
-            List<Point> punten = new List<Point>();
+            Stack<Point> punten = new Stack<Point>();
 
             string[] instellingen = serialisatie.Split('\\');
             foreach (string instelling in instellingen)
@@ -70,15 +70,15 @@ namespace SchetsEditor.Historie
             return Int32.Parse(waarde);
         }
 
-        private static List<Point> instellingNaarPunten(string waarde)
+        private static Stack<Point> instellingNaarPunten(string waarde)
         {
             string[] puntStrings = waarde.Split(';');
-            List<Point> punten = new List<Point>();
+            Stack<Point> punten = new Stack<Point>();
 
             foreach (string punt in puntStrings)
             {
                 string[] xEnY = punt.Split(',');
-                punten.Add(new Point(int.Parse(xEnY[0]), int.Parse(xEnY[1])));
+                punten.Push(new Point(int.Parse(xEnY[0]), int.Parse(xEnY[1])));
             }
 
             return punten;
@@ -88,8 +88,8 @@ namespace SchetsEditor.Historie
         {
             Pen pen = new Pen(kleur, dikte);
 
-            Point vorigePunt = gekleurdePunten.First();
-            foreach (Point punt in gekleurdePunten)
+            Point vorigePunt = Punten.First();
+            foreach (Point punt in Punten)
             {
                 g.DrawLine(pen, vorigePunt, punt);
                 vorigePunt = punt;

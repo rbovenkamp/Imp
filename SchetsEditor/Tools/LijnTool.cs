@@ -11,22 +11,27 @@ namespace SchetsEditor.Tools
     {
         public override string ToString() { return "lijn"; }
 
-        public override void Bezig(Graphics g, Point p1, Point p2)
-        {
-            g.DrawLine(MaakPen(this.kwast, 3), p1, p2);
-        }
-
+        PenObject huidigPenObject;
         public override void MuisVast(SchetsControl s, Point p)
         {
             base.MuisVast(s, p);
-            this.sc = s;
+            Stack<Point> st = new Stack<Point>();
+            st.Push(p);
+            st.Push(p);
+            huidigPenObject = new PenObject(s.PenKleur, 3, st);
+            s.Schets.Historie.Push(huidigPenObject);
         }
 
-        SchetsControl sc;
+        public override void Bezig(Graphics g, Point p1, Point p2)
+        {
+            huidigPenObject.Punten.Pop();
+            huidigPenObject.Punten.Push(p2);
+        }
+
         public override void Compleet(Graphics g, Point p1, Point p2)
         {
-            sc.Historie.Push(new PenObject(MaakPen(this.kwast, 3).Color, 3, new List<Point>() { p1, p2 }));
             this.Bezig(g, p1, p2);
+            huidigPenObject = null;
         }
     }
 }

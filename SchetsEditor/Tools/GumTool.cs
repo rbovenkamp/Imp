@@ -12,7 +12,7 @@ namespace SchetsEditor.Tools
 
         //public override void Bezig(Graphics g, Point p1, Point p2)
         //{
-        //    g.DrawLine(MaakPen(Brushes.White, 7), p1, p2);asdf
+        //    g.DrawLine(MaakPen(Brushes.White, 7), p1, p2);
         //}
     }
 }

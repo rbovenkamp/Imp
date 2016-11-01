@@ -49,6 +49,7 @@
     <Compile Include="Dialog\OpenImageDialog.cs" />
     <Compile Include="Dialog\SaveImageDialog.cs" />
     <Compile Include="Historie\PenObject.cs" />
+    <Compile Include="Historie\PlaatjeObject.cs" />
     <Compile Include="Hoofdscherm.cs" />
     <Compile Include="Historie\ISchetsObject.cs" />
     <Compile Include="Historie\SchetsHistorie.cs" />

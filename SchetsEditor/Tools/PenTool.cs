@@ -8,49 +8,29 @@ using System.Text;
 
 namespace SchetsEditor.Tools
 {
-    public class PenTool : StartpuntTool
+    public class PenTool : TweepuntTool
     {
         public override string ToString() { return "pen"; }
 
-        private List<Point> puntBuffer = new List<Point>();
-
-        private Point huidigePunt;
-
+        PenObject huidigPenObject;
         public override void MuisVast(SchetsControl s, Point p)
         {
             base.MuisVast(s, p);
-            huidigePunt = p;
-            this.TekenPunt(s, p);
-        }
-        public override void MuisDrag(SchetsControl s, Point p)
-        {
-            base.MuisVast(s, p);
-            base.MuisLos(s, p);
-            this.TekenPunt(s, p);
-            s.Refresh();
-        }
-        public override void MuisLos(SchetsControl s, Point p)
-        {
-            base.MuisLos(s, p);
-            this.TekenPunt(s, p);
-            puntBuffer.Distinct().ToList();
-            s.Historie.Push(new PenObject(s.PenKleur, 3, puntBuffer));
-            puntBuffer = new List<Point>();
-            s.Invalidate();
+            Stack<Point> st = new Stack<Point>();
+            st.Push(p);
+            huidigPenObject = new PenObject(s.PenKleur, 3, st);
+            s.Schets.Historie.Push(huidigPenObject);
         }
 
-        private void TekenPunt(SchetsControl s, Point p)
+        public override void Bezig(Graphics g, Point p1, Point p2)
         {
-            puntBuffer.Add(p);
-            Graphics g = s.MaakBitmapGraphics();
-            s.Invalidate();
-            g.DrawLine(new Pen(s.PenKleur, 3), huidigePunt, p);
-
-            huidigePunt = p;
+            huidigPenObject.Punten.Push(p2);
         }
 
-        public override void Letter(SchetsControl s, char c)
+        public override void Compleet(Graphics g, Point p1, Point p2)
         {
+            this.Bezig(g, p1, p2);
+            huidigPenObject = null;
         }
     }
 }

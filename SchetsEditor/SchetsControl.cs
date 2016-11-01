@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace SchetsEditor
 {   public class SchetsControl : UserControl
     {   private Schets schets;
-        public SchetsHistorie Historie;
+        
         private Color penkleur;
 
         public Color PenKleur
@@ -26,24 +26,18 @@ namespace SchetsEditor
             this.schets = new Schets(bmp);
             initialiseerControls();
         }
-        public void LaadHistorieUitString(string schetsBestand)
+        
+        public void LaadHistorie(string historie)
         {
-            this.Historie = new SchetsHistorie(schetsBestand);
-            TekenHistorie();
+            this.Schets.LaadHistorieUitString(historie);
+            this.Invalidate();
         }
-        public void TekenHistorie()
-        {
-            Graphics g = this.MaakBitmapGraphics();
 
-            for (int n = 0; n < Historie.Count; n++)
-            {
-                Historie[n].Teken(g);
-            }
-        }
         private void initialiseerControls()
         {
-            this.Historie = new SchetsHistorie();
+            this.BackColor = Color.White;
             this.BorderStyle = BorderStyle.Fixed3D;
+            this.DoubleBuffered = true;
             this.Paint += this.teken;
             this.Resize += this.veranderAfmeting;
             this.veranderAfmeting(null, null);
@@ -52,16 +46,19 @@ namespace SchetsEditor
         {
         }
         private void teken(object o, PaintEventArgs pea)
-        {   schets.Teken(pea.Graphics);
+        {
+            pea.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            schets.Teken(pea.Graphics);
         }
         private void veranderAfmeting(object o, EventArgs ea)
         {   schets.VeranderAfmeting(this.ClientSize);
             this.Invalidate();
         }
         public Graphics MaakBitmapGraphics()
-        {   Graphics g = schets.BitmapGraphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            return g;
+        {
+        //    Graphics g = schets.BitmapGraphics;
+        //    g.SmoothingMode = SmoothingMode.AntiAlias;
+            return null;
         }
         public void Schoon(object o, EventArgs ea)
         {   schets.Schoon();

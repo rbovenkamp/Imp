@@ -44,6 +44,10 @@ namespace SchetsEditor.Historie
                         ISchetsObject penObject = PenObject.VanSerialisatie(typeAndValue[1]);
                         this.Push(penObject);
                         break;
+                    case "PlaatjeObject":
+                        ISchetsObject plaatjeObject = PlaatjeObject.VanSerialisatie(typeAndValue[1]);
+                        this.Push(plaatjeObject);
+                        break;
                 }
             }
         }
@@ -53,7 +57,7 @@ namespace SchetsEditor.Historie
             StringBuilder s = new StringBuilder();
             foreach (ISchetsObject schetsObject in this)
             {
-                s.AppendLine(schetsObject.GetType().Name + "=" + schetsObject.Serialiseer());
+                s.Insert(0, schetsObject.GetType().Name + "=" + schetsObject.Serialiseer() + Environment.NewLine);
             }
             return s.ToString();
         }
