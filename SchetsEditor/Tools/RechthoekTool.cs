@@ -11,30 +11,23 @@ namespace SchetsEditor.Tools
     {
         public override string ToString() { return "kader"; }
 
-        PenObject huidigPenObject;
+        RechthoekObject huidigObject;
         public override void MuisVast(SchetsControl s, Point p)
         {
             base.MuisVast(s, p);
-            Stack<Point> st = new Stack<Point>();
-            st.Push(p);
-            huidigPenObject = new PenObject(s.PenKleur, 3, st);
-            s.Schets.Historie.Push(huidigPenObject);
+            huidigObject = new RechthoekObject(s.PenKleur, 3, p, p);
+            s.Schets.Historie.Push(huidigObject);
         }
 
         public override void Bezig(Graphics g, Point p1, Point p2)
         {
-            huidigPenObject.Punten.Clear();
-            huidigPenObject.Punten.Push(p1);
-            huidigPenObject.Punten.Push(new Point(p1.X, p2.Y));
-            huidigPenObject.Punten.Push(p2);
-            huidigPenObject.Punten.Push(new Point(p2.X, p1.Y));
-            huidigPenObject.Punten.Push(p1);
+            huidigObject.VeranderEinde(p2);
         }
 
         public override void Compleet(Graphics g, Point p1, Point p2)
         {
             this.Bezig(g, p1, p2);
-            huidigPenObject = null;
+            huidigObject = null;
         }
     }
 }

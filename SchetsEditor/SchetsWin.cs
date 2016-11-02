@@ -43,7 +43,33 @@ namespace SchetsEditor
 
         private void afsluiten(object obj, EventArgs ea)
         {
-            this.Close();
+            if (schetscontrol.Schets.Bewerkt == true)
+            {
+                DialogResult result = MessageBox.Show("Je hebt aanpassingen gedaan, wil je opslaan?", "Afsluiten", MessageBoxButtons.YesNoCancel);
+                switch(result)
+                {
+                    case DialogResult.Yes:
+                        opslaan(obj, ea);
+                        schetscontrol.Schets.Bewerkt = false;
+                        this.Close();
+                        break;
+                    case DialogResult.No:
+                        schetscontrol.Schets.Bewerkt = false;
+                        this.Close();
+                        break;
+                }
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+
+            afsluiten(this, e);
+            if (schetscontrol.Schets.Bewerkt == true)
+                e.Cancel = true;
         }
 
         private void opslaan(object obj, EventArgs ea)

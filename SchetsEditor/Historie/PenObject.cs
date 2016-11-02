@@ -95,5 +95,30 @@ namespace SchetsEditor.Historie
                 vorigePunt = punt;
             }
         }
+
+        public bool RaaktCirkel(Point locatie, int radius)
+        {
+            Point vorigePunt = Punten.First();
+            foreach (Point punt in Punten)
+            {
+                if (RaaktLijnCirkel(vorigePunt, punt, locatie, radius))
+                {
+                    return true;
+                }
+                else
+                {
+                    vorigePunt = punt;
+                }
+            }
+            return false;
+        }
+
+        public bool RaaktLijnCirkel(Point begin, Point einde, Point cirkel, int radius)
+        {
+            double bovenkant = Math.Abs((begin.X - einde.X) * (einde.Y - cirkel.Y) - (einde.X - cirkel.X) * (begin.Y - einde.Y));
+            double onderkant = Math.Sqrt(Math.Pow((begin.X - einde.X), 2) + Math.Pow(begin.Y - einde.Y, 2));
+            double afstand = bovenkant / onderkant;
+            return afstand <= radius;
+        }
     }
 }

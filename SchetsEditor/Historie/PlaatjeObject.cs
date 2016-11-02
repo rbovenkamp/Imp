@@ -109,5 +109,10 @@ namespace SchetsEditor.Historie
         {
             g.DrawImage(this.Bitmap, 0, 0, this.Bitmap.Width, this.Bitmap.Height);
         }
+
+        public bool RaaktCirkel(Point locatie, int radius)
+        {
+            return false;
+        }
     }
 }

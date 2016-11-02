@@ -38,17 +38,26 @@ namespace SchetsEditor.Historie
             while (!String.IsNullOrEmpty(line = reader.ReadLine()))
             {
                 string[] typeAndValue = line.Split('=');
+                ISchetsObject so = null;
                 switch (typeAndValue[0])
                 {
                     case "PenObject":
-                        ISchetsObject penObject = PenObject.VanSerialisatie(typeAndValue[1]);
-                        this.Push(penObject);
+                        so = PenObject.VanSerialisatie(typeAndValue[1]);
                         break;
                     case "PlaatjeObject":
-                        ISchetsObject plaatjeObject = PlaatjeObject.VanSerialisatie(typeAndValue[1]);
-                        this.Push(plaatjeObject);
+                        so = PlaatjeObject.VanSerialisatie(typeAndValue[1]);
+                        break;
+                    case "LijnObject":
+                        so = PenObject.VanSerialisatie(typeAndValue[1]);
+                        break;
+                    case "RechthoekObject":
+                        so = PenObject.VanSerialisatie(typeAndValue[1]);
+                        break;
+                    case "GumObject":
+                        so = GumObject.VanSerialisatie(typeAndValue[1]);
                         break;
                 }
+                this.Push(so);
             }
         }
 

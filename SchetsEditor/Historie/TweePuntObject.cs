@@ -42,5 +42,10 @@ namespace SchetsEditor.Historie
             int y = int.Parse(strings[1]);
             return new Point(x, y);
         }
+
+        public bool RaaktCirkel(Point locatie, int radius)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
