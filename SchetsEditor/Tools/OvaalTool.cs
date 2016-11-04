@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchetsEditor.Historie;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,9 +11,25 @@ namespace SchetsEditor.Tools
     {
         public override string ToString() { return "ovaal"; }
 
+        OvaalObject huidigOvaalObject;
+        SchetsControl temphulp;
+        public override void MuisVast(SchetsControl s, Point p)
+        {
+            base.MuisVast(s, p);
+            temphulp = s;
+            huidigOvaalObject = new OvaalObject(p, p, 3, s.PenKleur);
+            s.Schets.Historie.Push(huidigOvaalObject);
+        }
+
         public override void Bezig(Graphics g, Point p1, Point p2)
         {
-            g.DrawEllipse(MaakPen(kwast, 3), TweepuntTool.Punten2Rechthoek(p1, p2));
+            huidigOvaalObject.einde = p2;
+        }
+
+        public override void Compleet(Graphics g, Point p1, Point p2)
+        {
+            Bezig(g, p1, p2);
+            huidigOvaalObject = null;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace SchetsEditor.Tools
             base.MuisVast(s, p);
             Stack<Point> st = new Stack<Point>();
             st.Push(p);
-            huidigPenObject = new PenObject(s.PenKleur, 3, st);
+            huidigPenObject = new PenObject(s.PenKleur, s.PenDikte, st);
             s.Schets.Historie.Push(huidigPenObject);
         }
 

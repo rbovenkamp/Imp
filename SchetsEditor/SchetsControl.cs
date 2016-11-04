@@ -6,24 +6,18 @@ using System.Windows.Forms;
 
 namespace SchetsEditor
 {   public class SchetsControl : UserControl
-    {   private Schets schets;
-        
-        private Color penkleur;
-
-        public Color PenKleur
-        { get { return penkleur; }
-        }
-        public Schets Schets
-        { get { return schets;   }
-        }
+    {
+        public Color PenKleur { get; private set; } = Color.Black;
+        public int PenDikte { get; private set; } = 3;
+        public Schets Schets { get; private set; }
         public SchetsControl()
         {   
-            this.schets = new Schets();
+            this.Schets = new Schets();
             initialiseerControls();
         }
         public SchetsControl(Bitmap bmp)
         {
-            this.schets = new Schets(bmp);
+            this.Schets = new Schets(bmp);
             initialiseerControls();
         }
         
@@ -49,10 +43,11 @@ namespace SchetsEditor
         {
             pea.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             pea.Graphics.FillRectangle(Brushes.White, 0, 0, ClientSize.Width, ClientSize.Height);
-            schets.Teken(pea.Graphics);
+            Schets.Teken(pea.Graphics);
         }
         private void veranderAfmeting(object o, EventArgs ea)
-        {   schets.VeranderAfmeting(this.ClientSize);
+        {
+            Schets.VeranderAfmeting(this.ClientSize);
             this.Invalidate();
         }
         public Graphics MaakBitmapGraphics()
@@ -62,21 +57,30 @@ namespace SchetsEditor
             return null;
         }
         public void Schoon(object o, EventArgs ea)
-        {   schets.Schoon();
+        {
+            Schets.Schoon();
             this.Invalidate();
         }
         public void Roteer(object o, EventArgs ea)
-        {   schets.VeranderAfmeting(new Size(this.ClientSize.Height, this.ClientSize.Width));
-            schets.Roteer();
+        {
+            Schets.VeranderAfmeting(new Size(this.ClientSize.Height, this.ClientSize.Width));
+            Schets.Roteer();
             this.Invalidate();
         }
         public void VeranderKleur(object obj, EventArgs ea)
-        {   string kleurNaam = ((ComboBox)obj).Text;
-            penkleur = Color.FromName(kleurNaam);
+        {
+            ColorDialog d = new ColorDialog();
+            d.Color = (obj as Button).BackColor;
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                this.PenKleur = d.Color;
+                (obj as Button).BackColor = d.Color;
+            }
         }
-        public void VeranderKleurViaMenu(object obj, EventArgs ea)
-        {   string kleurNaam = ((ToolStripMenuItem)obj).Text;
-            penkleur = Color.FromName(kleurNaam);
+
+        public void VeranderPenDikte(int dikte)
+        {
+            this.PenDikte = dikte;
         }
     }
 }

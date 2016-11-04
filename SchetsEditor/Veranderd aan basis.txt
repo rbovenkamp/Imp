@@ -1,3 +1,13 @@
-﻿Tools in meerdere bestanden gesplitst zodat ik minder hoef te scrollen op mijn kleine laptop scherm
-PenTool compleet aangepast zodat deze makkelijker op te slaan is als lijnen i.p.v. losse punten
-Ik heb de basis van schets een "schetshistorie" gemaakt ipv een bitmap. Met de bitmap kon ik geen doublebuffered krijgen, in dit geval wel.
+﻿Cirkels toegevoegd aan SchetsWin en als tools.
+Openimagedialog en saveimagedialog toegevoegd om andere klassen niet nog groter te maken. Dit is een wrapper class omdat de filedialog's sealed classes zijn.
+Alle klasses vanaf Schetswin naar beneden hebben een constructor gekregen om met bitmaps geconstrueerd te worden.
+Tools in meerdere bestanden gesplitst zodat ik minder hoef te scrollen op mijn kleine laptop scherm.
+Schetshistorie toegevoegd om bij te kunnen houden wat er gedaan is.
+Objecten voor de schetshistorie gemaakt zodat deze toegevoegd, getekend en geselecteerd kunnen worden.
+Alle tools zijn aangepast zodat ze een object in de historie plaatsen en vervolgens de schets invalidaten ipv direct ergens op tekenen.
+Ook de gum is bewerkt naar de opdracht
+Ik heb de basis van schets een "schetshistorie" gemaakt ipv een bitmap. Met de bitmap kon ik geen doublebuffered krijgen, in dit geval wel. 
+De schets tekent nu de historie telkens opnieuw wanneer invalidate op schetscontrol is aangeroepen.
+In schetswin heb ik undo en redo toegevoegd, deze werken zowel met ctrl z/y als met de menu knoppen.
+In Schetswin heb ik flexibele kleuren toegevoegd, hiervoor heb ik bij schetscontrol de veranderkleur functie aangepast en veranderkleurmenu verwijderd.
+VerplaatsTool toegevoegd, kan nog niet opgeslagen worden.

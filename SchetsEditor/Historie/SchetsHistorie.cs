@@ -12,7 +12,7 @@ namespace SchetsEditor.Historie
         private Stack<ISchetsObject> historie;
         private Stack<ISchetsObject> toekomst;
 
-        public event EventHandler onObjectToegevoegd;
+        public event EventHandler onVeranderd;
 
         public int Count
         {
@@ -56,6 +56,18 @@ namespace SchetsEditor.Historie
                     case "GumObject":
                         so = GumObject.VanSerialisatie(typeAndValue[1]);
                         break;
+                    case "VolOvaalObject":
+                        so = VolOvaalObject.VanSerialisatie(typeAndValue[1]);
+                        break;
+                    case "VolRechthoekObject":
+                        so = VolRechthoekObject.VanSerialisatie(typeAndValue[1]);
+                        break;
+                    case "TekstObject":
+                        so = TekstObject.VanSerialisatie(typeAndValue[1]);
+                        break;
+                    case "OvaalObject":
+                        so = OvaalObject.VanSerialisatie(typeAndValue[1]);
+                        break;
                 }
                 this.Push(so);
             }
@@ -71,10 +83,14 @@ namespace SchetsEditor.Historie
             return s.ToString();
         }
 
-        public void Push(ISchetsObject schetsObject)
+        public void Push(ISchetsObject schetsObject, bool clearToekomst = true)
         {
             historie.Push(schetsObject);
-            onObjectToegevoegd?.Invoke(schetsObject, new EventArgs());
+            if (clearToekomst)
+            {
+                toekomst.Clear();
+            }
+            onVeranderd?.Invoke(schetsObject, new EventArgs());
         }
 
         public ISchetsObject Undo()
@@ -87,11 +103,12 @@ namespace SchetsEditor.Historie
             {
                 ISchetsObject schetsObject = historie.Pop();
                 toekomst.Push(schetsObject);
+                onVeranderd?.Invoke(schetsObject, new EventArgs());
                 return schetsObject;
             }
         }
 
-        public ISchetsObject Redo()
+        public ISchetsObject BACK_TO_THE_FUTURE()
         {
             if (toekomst.Peek() == null)
             {
@@ -100,8 +117,32 @@ namespace SchetsEditor.Historie
             else
             {
                 ISchetsObject schetsObject = toekomst.Pop();
-                this.Push(schetsObject);
+                this.Push(schetsObject, false);
                 return schetsObject;
+            }
+        }
+
+        public ISchetsObject Peek()
+        {
+            if (historie.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return historie.Peek();
+            }
+        }
+
+        public ISchetsObject PeekToekomst()
+        {
+            if (toekomst.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return toekomst.Peek();
             }
         }
 

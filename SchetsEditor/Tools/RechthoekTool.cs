@@ -15,7 +15,7 @@ namespace SchetsEditor.Tools
         public override void MuisVast(SchetsControl s, Point p)
         {
             base.MuisVast(s, p);
-            huidigObject = new RechthoekObject(s.PenKleur, 3, p, p);
+            huidigObject = new RechthoekObject(s.PenKleur, s.PenDikte, p, p);
             s.Schets.Historie.Push(huidigObject);
         }
 

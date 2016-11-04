@@ -36,10 +36,10 @@ namespace SchetsEditor
 
         public void Initialiseer()
         {
-            this.Historie.onObjectToegevoegd += Historie_onObjectToegevoegd;
+            this.Historie.onVeranderd += Historie_onVeranderd;
         }
 
-        private void Historie_onObjectToegevoegd(object sender, EventArgs e)
+        private void Historie_onVeranderd(object sender, EventArgs e)
         {
             this.Bewerkt = true;
         }
@@ -52,10 +52,6 @@ namespace SchetsEditor
         public void VeranderAfmeting(Size sz)
         {
             this.sz = sz;
-            if (this.Historie.Count == 0)
-            {
-                this.Historie.Push(new PlaatjeObject(new Bitmap(sz.Width, sz.Height)));
-            }
         }
         public void Teken(Graphics gr)
         {
@@ -69,7 +65,8 @@ namespace SchetsEditor
             }
             for (int n = Historie.Count - 1; n >= 0 ; n--)
             {
-                if (!nietTekenen.Contains(n))
+                int nummerVanOnderop = Historie.Count - n;
+                if (!nietTekenen.Contains(nummerVanOnderop))
                     Historie[n].Teken(gr);
             }
         }

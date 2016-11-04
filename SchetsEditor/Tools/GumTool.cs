@@ -19,13 +19,15 @@ namespace SchetsEditor.Tools
 
         public void MuisLos(SchetsControl s, Point p)
         {
-            for (int n = s.Schets.Historie.Count - 1; n >= 0; n--)
+            for (int n = 0; n < s.Schets.Historie.Count; n++)
             {
                 ISchetsObject so = s.Schets.Historie[n];
                 if (so.RaaktCirkel(p, 10))
                 {
-                    s.Schets.Historie.Push(new GumObject(n));
+                    int nummerVanOnderop = s.Schets.Historie.Count - n;
+                    s.Schets.Historie.Push(new GumObject(nummerVanOnderop));
                     s.Invalidate();
+                    return;
                 }
             }
         }

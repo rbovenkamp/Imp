@@ -49,10 +49,14 @@
     <Compile Include="Dialog\OpenImageDialog.cs" />
     <Compile Include="Dialog\SaveImageDialog.cs" />
     <Compile Include="Historie\GumObject.cs" />
+    <Compile Include="Historie\OvaalObject.cs" />
     <Compile Include="Historie\RechthoekObject.cs" />
     <Compile Include="Historie\LijnObject.cs" />
     <Compile Include="Historie\PenObject.cs" />
     <Compile Include="Historie\PlaatjeObject.cs" />
+    <Compile Include="Historie\TekstObject.cs" />
+    <Compile Include="Historie\VolOvaalObject.cs" />
+    <Compile Include="Historie\VolRechthoekObject.cs" />
     <Compile Include="Hoofdscherm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +81,7 @@
     <Compile Include="Tools\StartpuntTool.cs" />
     <Compile Include="Tools\TekstTool.cs" />
     <Compile Include="Tools\TweepuntTool.cs" />
+    <Compile Include="Tools\VerplaatsTool.cs" />
     <Compile Include="Tools\VolOvaalTool.cs" />
     <Compile Include="Tools\VolRechthoekTool.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -118,6 +123,7 @@
     <None Include="Resources\text.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\hand.png" />
     <Content Include="Veranderd aan basis.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
