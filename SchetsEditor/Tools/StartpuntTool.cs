@@ -15,6 +15,7 @@ namespace SchetsEditor.Tools
         {
             startpunt = p;
         }
+
         public virtual void MuisLos(SchetsControl s, Point p)
         {
             kwast = new SolidBrush(s.PenKleur);

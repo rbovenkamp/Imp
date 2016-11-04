@@ -1,13 +1,15 @@
 ﻿using SchetsEditor.Historie;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace SchetsEditor
 {
     public class Schets
     {
+        public bool Bewerkt = false;
         public SchetsHistorie Historie;
-        private Size sz;
+        public Size sz;
 
         public Bitmap Bitmap
         {
@@ -23,11 +25,23 @@ namespace SchetsEditor
         public Schets()
         {
             this.Historie = new SchetsHistorie();
+            Initialiseer();
         }
         public Schets(Bitmap bmp)
         {
             this.Historie = new SchetsHistorie();
             this.Historie.Push(new PlaatjeObject(bmp));
+            Initialiseer();
+        }
+
+        public void Initialiseer()
+        {
+            this.Historie.onVeranderd += Historie_onVeranderd;
+        }
+
+        private void Historie_onVeranderd(object sender, EventArgs e)
+        {
+            this.Bewerkt = true;
         }
 
         public void LaadHistorieUitString(string schetsBestand)
@@ -38,16 +52,22 @@ namespace SchetsEditor
         public void VeranderAfmeting(Size sz)
         {
             this.sz = sz;
-            if (this.Historie.Count == 0)
-            {
-                this.Historie.Push(new PlaatjeObject(new Bitmap(sz.Width, sz.Height)));
-            }
         }
         public void Teken(Graphics gr)
         {
+            List<int> nietTekenen = new List<int>();
+            foreach (ISchetsObject so in this.Historie)
+            {
+                if (so is GumObject)
+                {
+                    nietTekenen.Add((so as GumObject).Object);
+                }
+            }
             for (int n = Historie.Count - 1; n >= 0 ; n--)
             {
-                Historie[n].Teken(gr);
+                int nummerVanOnderop = Historie.Count - n;
+                if (!nietTekenen.Contains(nummerVanOnderop))
+                    Historie[n].Teken(gr);
             }
         }
         public void Schoon()

@@ -9,7 +9,7 @@ namespace Reversi.Spelers
 {
     public class AI_Slim : Speler
     {
-        public const int denkTijdMiliSec = 50;
+        public const int denkTijdMiliSec = 500;
 
         public AI_Slim(Color spelerKleur, string spelerNaam) : base(spelerKleur, spelerNaam)
         {
@@ -28,6 +28,7 @@ namespace Reversi.Spelers
 
                 if (spel.SpelerAanZet == this)
                 {
+                    // Asynchroon zodat de UI kan updaten
                     await Task.Delay(denkTijdMiliSec);
                     if (spel.SpelerAanZet == this)
                     {
@@ -36,25 +37,31 @@ namespace Reversi.Spelers
 
                         foreach (Point suspect in nettoWinstPerZet.Keys)
                         {
+                            // Maak een simulatie spel aan
                             Spel spelKopie = spel.MaakSimulatieVoor(this, new Mens(Color.Black, "Dummy"));
 
+                            // Doe de zet die getest wordt in de simulatie
                             spelKopie.DoeZet(this, suspect);
                             if (spelKopie.MogelijkeZetten.Count == 0)
                             {
+                                // Als de tegenstander na deze zet niks kan doen, doe deze zet
                                 spel.DoeZet(this, suspect);
                                 return;
                             }
                             else
                             {
+                                // Bekijk hoe veel de tegenstander max kan veroveren na de testzet
                                 verliesPerZet.Add(suspect, spelKopie.MogelijkeZetten.Values.Max(x => x.Count));
                             }
                         }
 
+                        // Zelf gewonnen - max wat de tegenstander kan veroveren
                         Dictionary<Point, int> brutoWinstPerZet = nettoWinstPerZet.ToDictionary(
                                 x => x.Key,
                                 x => x.Value - verliesPerZet[x.Key]
                             );
 
+                        // Kies de zet waarmee je het meest zal winnen
                         Point gekozenZet = brutoWinstPerZet
                             .FirstOrDefault(x => x.Value == brutoWinstPerZet.Max(y => y.Value))
                             .Key;

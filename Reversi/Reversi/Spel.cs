@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace Reversi
 {
     public class Spel : UserControl
-    {     
+    {
         public int VakjesBreedte { get; private set; }
         public int VakjesHoogte { get; private set; }
 
@@ -31,7 +31,10 @@ namespace Reversi
             private set
             {
                 _spelerAanZet = value;
-                onNieuweBeurt(this, new EventArgs());
+                if (_spelerAanZet != null)
+                {
+                    onNieuweBeurt(this, new EventArgs());
+                }
             }
         }
 
@@ -50,6 +53,7 @@ namespace Reversi
         }
 
         public event EventHandler onNieuweBeurt;
+        public event EventHandler onSpelerGewonnen;
 
         public Spel(int vakjesBreedte, int vakjesHoogte, Speler speler1, Speler speler2, bool isSimulatie = false)
         {
@@ -93,18 +97,20 @@ namespace Reversi
             if (this.MogelijkeZetten.Count == 0 && this.SpelerAanZet != null)
             {
                 aantalDodeZetten++;
-
+                // Een dode zet is als een speler niets kan doen
                 if (aantalDodeZetten < 2)
                 {
                     if (!isSimulatie)
-                        MessageBox.Show(SpelerAanZet.Naam + " kan niks meer doen, de beurt is beeindigd.");
-                    this.volgendeSpeler();
+                    {
+                        DialogResult test = MessageBox.Show(SpelerAanZet.Naam + " kan niks meer doen, de beurt is beeindigd.");
+                        this.volgendeSpeler();
+                    }
                 }
                 else
                 {
                     this.SpelerAanZet = null;
                     if (!isSimulatie)
-                        MessageBox.Show(Winnaar.Naam + " heeft gewonnen");
+                        onSpelerGewonnen(this.Winnaar, new EventArgs());
                 }
             }
             else
@@ -173,12 +179,14 @@ namespace Reversi
 
         private List<Point> VeroverdePuntenBijZet(Point zet, Speler speler)
         {
+            // Als er al wat op die plek staat
             if (BordRepresentatie[zet.X, zet.Y] != null)
             {
                 return new List<Point>();
             }
 
             List<Point> veroverdePunten = new List<Point>();
+            // Loop alle relatieve richtingen
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
@@ -194,10 +202,13 @@ namespace Reversi
         {
             Point echtePunt = new Point(punt.X, punt.Y);
             Speler eigenaar = BordRepresentatie[echtePunt.X, echtePunt.Y]?.Eigenaar;
+            // Stack om punten op te gooien voor als het valide is
+            //    , is het niet valide dan wordt deze niet teruggegeven
             List<Point> potentieelVeroverdePunten = new List<Point>();
 
             while (eigenaar != speler)
             {
+                // Doe een stap in deze richting
                 echtePunt.X += richting.X;
                 echtePunt.Y += richting.Y;
 
@@ -205,15 +216,17 @@ namespace Reversi
                 {
                     eigenaar = BordRepresentatie[echtePunt.X, echtePunt.Y]?.Eigenaar;
                     if (eigenaar == speler)
-                    {
+                    { // Zet is valide, geef veroverde punten terug
                         return potentieelVeroverdePunten;
                     }
                     else if (eigenaar == null)
                     {
+                        // Zet is niet valide
                         return new List<Point>();
                     }
                     else
                     {
+                        // Onbekend of zet valide is, voeg punt toe aan potentieel veroverd
                         potentieelVeroverdePunten.Add(echtePunt);
                     }
                 }
@@ -243,12 +256,20 @@ namespace Reversi
             }
             else
             {
-                await Task.Delay(1);
-                this.BordRepresentatie[zet.X, zet.Y] = new Steentje(speler);
-
-                foreach (Point veroverd in MogelijkeZetten[zet])
+                // Zorg dat alle spelers een beslissing hebben genomen (10MS foutmarge)
+                await Task.Delay(10);
+                if (speler != SpelerAanZet)
                 {
-                    this.BordRepresentatie[veroverd.X, veroverd.Y] = new Steentje(speler);
+                    return;
+                }
+                this.BordRepresentatie[zet.X, zet.Y] = new Steentje(speler);
+                if (MogelijkeZetten.Count > 0)
+                {
+                    // Verover de zetten
+                    foreach (Point veroverd in MogelijkeZetten[zet])
+                    {
+                        this.BordRepresentatie[veroverd.X, veroverd.Y] = new Steentje(speler);
+                    }
                 }
 
                 volgendeSpeler();
@@ -269,6 +290,7 @@ namespace Reversi
 
         private void Spel_Resize(object sender, EventArgs e)
         {
+            // Zorg dat het bord vierkant blijft
             int pixelsPerVakjeBreed = this.Width / this.VakjesBreedte;
             int pixelsPerVakjeHoog = this.Height / this.VakjesHoogte;
 
@@ -332,6 +354,7 @@ namespace Reversi
 
         public Spel MaakSimulatieVoor(Speler jij, Speler simulatie)
         {
+            // Maak een nieuw spel aan zodat een eventuele AI daarop kan simuleren
             Spel kloon = new Spel(this.VakjesBreedte, this.VakjesHoogte, jij, simulatie, true);
             kloon.BordRepresentatie = this.BordRepresentatie.Clone() as Steentje[,];
             kloon.SpelerAanZet = jij;

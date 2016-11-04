@@ -8,7 +8,7 @@ namespace Reversi.Spelers
 {
     public class AI_MeestVeroverd : Speler
     {
-        public const int denkTijdMiliSec = 50;
+        public const int denkTijdMiliSec = 500;
 
         public AI_MeestVeroverd(Color spelerKleur, string spelerNaam) : base(spelerKleur, spelerNaam)
         {
@@ -27,9 +27,11 @@ namespace Reversi.Spelers
 
                 if (spel.SpelerAanZet == this)
                 {
+                    // Asynchroon zodat de UI kan updaten
                     await Task.Delay(denkTijdMiliSec);
                     if (spel.SpelerAanZet == this)
                     {
+                        // Zoek het hoogst aantal veroverde punten uit mogelijke zetten
                         Point zet = spel.MogelijkeZetten
                             .FirstOrDefault(x =>
                                 x.Value.Count ==

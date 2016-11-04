@@ -13,7 +13,7 @@ namespace Reversi
 {
     public partial class Menu : UserControl
     {
-        
+
         public int bordBreedte
         {
             get
@@ -87,6 +87,7 @@ namespace Reversi
 
         private void voegOptiesToeAanComboBoxes()
         {
+            // Haal alle types op die een kindklasse zijn van Speler, converteer naar string en sorteer
             var opties = Assembly.GetAssembly(typeof(Speler)).GetTypes()
                 .Where(t => typeof(Speler).IsAssignableFrom(t))
                 .ToList()
@@ -124,7 +125,7 @@ namespace Reversi
                 button2.BackColor = colorDialog2.Color;
             }
         }
-        
+
 
     }
 }

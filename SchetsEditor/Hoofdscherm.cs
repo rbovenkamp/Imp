@@ -9,6 +9,7 @@ namespace SchetsEditor
     public class Hoofdscherm : Form
     {
         MenuStrip menuStrip;
+        string belangrijk = "Schets editorinator Mega Premium ++ .net # Proffesional Edition ++ voordeel";
 
         public Hoofdscherm()
         {   this.ClientSize = new Size(800, 600);
@@ -16,7 +17,7 @@ namespace SchetsEditor
             this.Controls.Add(menuStrip);
             this.maakFileMenu();
             this.maakHelpMenu();
-            this.Text = "Schets editor";
+            this.Text = belangrijk;
             this.IsMdiContainer = true;
             this.MainMenuStrip = menuStrip;
         }
@@ -35,8 +36,8 @@ namespace SchetsEditor
             menuStrip.Items.Add(menu);
         }
         private void about(object o, EventArgs ea)
-        {   MessageBox.Show("Schets versie 1.0\n(c) UU Informatica 2010"
-                           , "Over \"Schets\""
+        {   MessageBox.Show(belangrijk + "versie System.DivideByZeroException \n    (c) UU Informatica en Natuurkunde 2000 + 420"
+                           , "Over \"" + belangrijk + "\""
                            , MessageBoxButtons.OK
                            , MessageBoxIcon.Information
                            );

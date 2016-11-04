@@ -9,6 +9,7 @@ namespace SchetsEditor.Historie
     public interface ISchetsObject
     {
         void Teken(Graphics g);
+        bool RaaktCirkel(Point locatie, int radius);
         string Serialiseer();
     }
 }

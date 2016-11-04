@@ -26,7 +26,7 @@ namespace Reversi
             throw new NotImplementedException();
         }
 
-        public static bool operator == (Speler speler1, Speler speler2)
+        public static bool operator ==(Speler speler1, Speler speler2)
         {
             return speler1?.ID == speler2?.ID;
         }

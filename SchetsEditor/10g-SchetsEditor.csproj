@@ -48,17 +48,30 @@
   <ItemGroup>
     <Compile Include="Dialog\OpenImageDialog.cs" />
     <Compile Include="Dialog\SaveImageDialog.cs" />
+    <Compile Include="Historie\GumObject.cs" />
+    <Compile Include="Historie\OvaalObject.cs" />
+    <Compile Include="Historie\RechthoekObject.cs" />
+    <Compile Include="Historie\LijnObject.cs" />
     <Compile Include="Historie\PenObject.cs" />
     <Compile Include="Historie\PlaatjeObject.cs" />
-    <Compile Include="Hoofdscherm.cs" />
+    <Compile Include="Historie\TekstObject.cs" />
+    <Compile Include="Historie\VolOvaalObject.cs" />
+    <Compile Include="Historie\VolRechthoekObject.cs" />
+    <Compile Include="Hoofdscherm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Historie\ISchetsObject.cs" />
     <Compile Include="Historie\SchetsHistorie.cs" />
     <Compile Include="Historie\TweePuntObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schets.cs" />
-    <Compile Include="SchetsControl.cs" />
-    <Compile Include="SchetsWin.cs" />
+    <Compile Include="SchetsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SchetsWin.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\GumTool.cs" />
     <Compile Include="Tools\ISchetsTool.cs" />
     <Compile Include="Tools\LijnTool.cs" />
@@ -68,6 +81,7 @@
     <Compile Include="Tools\StartpuntTool.cs" />
     <Compile Include="Tools\TekstTool.cs" />
     <Compile Include="Tools\TweepuntTool.cs" />
+    <Compile Include="Tools\VerplaatsTool.cs" />
     <Compile Include="Tools\VolOvaalTool.cs" />
     <Compile Include="Tools\VolRechthoekTool.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -109,6 +123,9 @@
     <None Include="Resources\text.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\fillovaal.png" />
+    <Content Include="Resources\hand.png" />
+    <Content Include="Resources\ovaal.png" />
     <Content Include="Veranderd aan basis.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

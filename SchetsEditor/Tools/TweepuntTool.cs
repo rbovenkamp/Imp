@@ -35,7 +35,7 @@ namespace SchetsEditor.Tools
         public override void MuisLos(SchetsControl s, Point p)
         {
             base.MuisLos(s, p);
-            this.Compleet(s.MaakBitmapGraphics(), this.startpunt, p);
+            this.Compleet(s.CreateGraphics(), this.startpunt, p);
             s.Invalidate();
         }
         public override void Letter(SchetsControl s, char c)

@@ -27,6 +27,7 @@ namespace Reversi.Spelers
 
                 if (spel.SpelerAanZet == this)
                 {
+                    // Asynchroon zodat de UI kan updaten
                     await Task.Delay(denkTijdMiliSec);
 
                     int aantalMogelijkeZetten = spel.MogelijkeZetten.Count;

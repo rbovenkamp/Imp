@@ -43,7 +43,33 @@ namespace SchetsEditor
 
         private void afsluiten(object obj, EventArgs ea)
         {
-            this.Close();
+            if (schetscontrol.Schets.Bewerkt == true)
+            {
+                DialogResult result = MessageBox.Show("Je hebt aanpassingen gedaan, wil je opslaan?", "Afsluiten", MessageBoxButtons.YesNoCancel);
+                switch(result)
+                {
+                    case DialogResult.Yes:
+                        opslaan(obj, ea);
+                        schetscontrol.Schets.Bewerkt = false;
+                        this.Close();
+                        break;
+                    case DialogResult.No:
+                        schetscontrol.Schets.Bewerkt = false;
+                        this.Close();
+                        break;
+                }
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+
+            afsluiten(this, e);
+            if (schetscontrol.Schets.Bewerkt == true)
+                e.Cancel = true;
         }
 
         private void opslaan(object obj, EventArgs ea)
@@ -66,6 +92,26 @@ namespace SchetsEditor
                         File.WriteAllText(dialog.FileName, schetscontrol.Schets.Historie.Serialiseer());
                         break;
                 }
+            }
+        }
+
+        private void undo(object obj, EventArgs ea)
+        {
+            SchetsHistorie h = schetscontrol.Schets.Historie;
+            if (!(h.Peek() is PlaatjeObject) && h.Peek() != null)
+            {
+                h.Undo();
+                schetscontrol.Invalidate();
+            }
+        }
+
+        private void redo(object obj, EventArgs ea)
+        {
+            SchetsHistorie h = schetscontrol.Schets.Historie;
+            if (h.PeekToekomst() != null)
+            {
+                h.BACK_TO_THE_FUTURE();
+                schetscontrol.Invalidate();
             }
         }
 
@@ -101,11 +147,8 @@ namespace SchetsEditor
                                     , new VolRechthoekTool()
                                     , new TekstTool()
                                     , new GumTool()
+                                    , new VerplaatsTool()
                                     };
-            String[] deKleuren = { "Black", "Red", "Green", "Blue"
-                                 , "Yellow", "Magenta", "Cyan"
-                                 };
-
             
             huidigeTool = deTools[0];
 
@@ -132,17 +175,31 @@ namespace SchetsEditor
             };
             this.Controls.Add(schetscontrol);
 
+            schetscontrol.KeyDown += schetscontrol_KeyDown;
+
             menuStrip = new MenuStrip();
             menuStrip.Visible = false;
             this.BackColor = Color.White;
             this.Controls.Add(menuStrip);
             this.maakFileMenu();
             this.maakToolMenu(deTools);
-            this.maakAktieMenu(deKleuren);
+            this.maakAktieMenu();
             this.maakToolButtons(deTools);
-            this.maakAktieButtons(deKleuren);
+            this.maakAktieButtons();
             this.Resize += this.veranderAfmeting;
             this.veranderAfmeting(null, null);
+        }
+
+        private void schetscontrol_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Z)
+            {
+                this.undo(sender, e);
+            }
+            if (e.Control && e.KeyCode == Keys.Y)
+            {
+                this.redo(sender, e);
+            }
         }
 
         private void maakFileMenu()
@@ -168,15 +225,13 @@ namespace SchetsEditor
             menuStrip.Items.Add(menu);
         }
 
-        private void maakAktieMenu(String[] kleuren)
+        private void maakAktieMenu()
         {   
             ToolStripMenuItem menu = new ToolStripMenuItem("Aktie");
+            menu.DropDownItems.Add("Terug (ctrl + z)", null, undo);
+            menu.DropDownItems.Add("Vooruit (ctrl + y)", null, redo);
             menu.DropDownItems.Add("Clear", null, schetscontrol.Schoon );
-            menu.DropDownItems.Add("Roteer", null, schetscontrol.Roteer );
-            ToolStripMenuItem submenu = new ToolStripMenuItem("Kies kleur");
-            foreach (string k in kleuren)
-                submenu.DropDownItems.Add(k, null, schetscontrol.VeranderKleurViaMenu);
-            menu.DropDownItems.Add(submenu);
+            menu.DropDownItems.Add("Kies kleur", null, (o, e) => schetscontrol.VeranderKleur(kleurButton, new EventArgs()));
             menuStrip.Items.Add(menu);
         }
 
@@ -200,14 +255,15 @@ namespace SchetsEditor
                 t++;
             }
         }
-
-        private void maakAktieButtons(String[] kleuren)
+        Button kleurButton;
+        NumericUpDown dikteButton;
+        private void maakAktieButtons()
         {   
             paneel = new Panel();
             paneel.Size = new Size(600, 24);
             this.Controls.Add(paneel);
             
-            Button b; Label l; ComboBox cbb;
+            Button b; Label l;
             b = new Button(); 
             b.Text = "Clear";  
             b.Location = new Point(  0, 0); 
@@ -221,18 +277,28 @@ namespace SchetsEditor
             paneel.Controls.Add(b);
             
             l = new Label();  
-            l.Text = "Penkleur:"; 
-            l.Location = new Point(180, 3); 
+            l.Text = "Pen kleur:"; 
+            l.Location = new Point(170, 3); 
             l.AutoSize = true;               
             paneel.Controls.Add(l);
-            
-            cbb = new ComboBox(); cbb.Location = new Point(240, 0); 
-            cbb.DropDownStyle = ComboBoxStyle.DropDownList; 
-            cbb.SelectedValueChanged += schetscontrol.VeranderKleur;
-            foreach (string k in kleuren)
-                cbb.Items.Add(k);
-            cbb.SelectedIndex = 0;
-            paneel.Controls.Add(cbb);
+
+            kleurButton = new Button();
+            kleurButton.BackColor = schetscontrol.PenKleur;
+            kleurButton.Location = new Point(230, 0);
+            kleurButton.Click += schetscontrol.VeranderKleur;
+            paneel.Controls.Add(kleurButton);
+
+            l = new Label();
+            l.Text = "Pen dikte:";
+            l.Location = new Point(320, 3);
+            l.AutoSize = true;
+            paneel.Controls.Add(l);
+
+            dikteButton = new NumericUpDown();
+            dikteButton.Value = schetscontrol.PenDikte;
+            dikteButton.Location = new Point(380, 0);
+            dikteButton.ValueChanged += schetscontrol.VeranderPenDikte;
+            paneel.Controls.Add(dikteButton);
         }
     }
 }

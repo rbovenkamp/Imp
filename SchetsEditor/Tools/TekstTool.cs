@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchetsEditor.Historie;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,23 +11,34 @@ namespace SchetsEditor.Tools
     {
         public override string ToString() { return "tekst"; }
 
+        private const string lijntje = "\u23B8";
+
+        TekstObject huidigTekstObject;
+
         public override void MuisDrag(SchetsControl s, Point p) { }
+
+        public override void MuisVast(SchetsControl s, Point p)
+        {
+            base.MuisVast(s, p);
+
+            // Ter verduidelijking wordt in eerste instantie een lijntje getekend om duidelijk te maken waar je gaat typen na te klikken.
+            if (huidigTekstObject != null)
+            {
+                if (huidigTekstObject.tekst == lijntje)
+                {
+                    huidigTekstObject.tekst = string.Empty;
+                }
+                huidigTekstObject = null;
+            }
+            huidigTekstObject = new TekstObject(startpunt, s.PenDikte, s.PenKleur, lijntje);
+            s.Schets.Historie.Push(huidigTekstObject);
+            s.Invalidate();
+        }
 
         public override void Letter(SchetsControl s, char c)
         {
-            if (c >= 32)
-            {
-                Graphics gr = s.MaakBitmapGraphics();
-                Font font = new Font("Tahoma", 40);
-                string tekst = c.ToString();
-                SizeF sz =
-                gr.MeasureString(tekst, font, this.startpunt, StringFormat.GenericTypographic);
-                gr.DrawString(tekst, font, kwast,
-                                              this.startpunt, StringFormat.GenericTypographic);
-                // gr.DrawRectangle(Pens.Black, startpunt.X, startpunt.Y, sz.Width, sz.Height);
-                startpunt.X += (int)sz.Width;
-                s.Invalidate();
-            }
+            huidigTekstObject.Letter(c);
+            s.Invalidate();
         }
     }
 }
